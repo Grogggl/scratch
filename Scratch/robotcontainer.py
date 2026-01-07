@@ -88,13 +88,17 @@ class RobotContainer:
 
         # example 2: Run sparkMax motor controller
         # for competition more contstants to constants.py
+        self.shooterBottom = SparkMax(10, SparkMax.MotorType.kBrushed)
+        self.shooterMiddle = SparkMax(11, SparkMax.MotorType.kBrushed)
         self.shooterFront = SparkMax(13, SparkMax.MotorType.kBrushless)
         self.shooterBack = SparkMax(12, SparkMax.MotorType.kBrushless)
         self.shooterFront.setInverted(True)
-        self.shooter = wpilib.MotorControllerGroup(self.shooterBack, self.shooterFront)
+        self.shooter = wpilib.MotorControllerGroup(self.shooterBack, self.shooterFront, self.shooterMiddle, self.shooterBottom)
 
         self.driverController.y().onTrue(cmd.runOnce(lambda:self.shooter.set(0.2)))
         self.driverController.y().onFalse(cmd.runOnce(lambda:self.shooter.set(0.0)))
+        self.driverController.b().onTrue(cmd.runOnce(lambda:self.shooter.set(-0.2)))
+        self.driverController.b().onFalse(cmd.runOnce(lambda:self.shooter.set(0.0)))
 
     def disablePIDSubsystems(self) -> None:
         """Disables all ProfiledPIDSubsystem and PIDSubsystem instances.
